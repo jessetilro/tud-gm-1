@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="models">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/models/caeserRange_5.obj.zip!/" />
+      <root url="jar://$PROJECT_DIR$/models/caeserRange_4.obj.zip!/" />
+      <root url="jar://$PROJECT_DIR$/models/caeserRange_6.obj.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
