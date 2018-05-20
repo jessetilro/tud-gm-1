@@ -36,19 +36,8 @@ public class Genus extends PjWorkshop {
 		int E = m_geom.getNumEdges();
 		// Face count provided by API
 		int F = m_geom.getNumElements();
-
-		// Could not find anything in API for counting vertices,
-		// so implemented a strategy using a HashSet to count
-		// the number of unique vertices
-		int maxNumVertices = E * 2 + m_geom.getNumUnusedVertices();
-		Set uniqueVertices = new HashSet<PdVector>(maxNumVertices);
-		for(int i = 0; i < F; i++) {
-			PdVector[] vertices = m_geom.getElementVertices(i);
-			for (PdVector vertex : vertices) {
-				uniqueVertices.add(vertex);
-			}
-		}
-		int V = uniqueVertices.size();
+		// Vertex count provided by API
+		int V = m_geom.getNumVertices();
 
 		int X = V - E + F;
 		int g = 1 - ( X / 2 );
