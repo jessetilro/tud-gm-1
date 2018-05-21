@@ -2,13 +2,10 @@ package workshop;
 
 import jv.geom.PgElementSet;
 import jv.project.PgGeometry;
-import jv.vecmath.PdVector;
 import jvx.project.PjWorkshop;
 
-import java.awt.*;
-import java.util.Random;
-
 public class Volume extends PjWorkshop {
+
     PgElementSet m_geom;
     PgElementSet m_geomSave;
 

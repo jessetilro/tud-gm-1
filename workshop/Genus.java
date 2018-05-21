@@ -2,13 +2,7 @@ package workshop;
 
 import jv.geom.PgElementSet;
 import jv.project.PgGeometry;
-import jv.vecmath.PdVector;
 import jvx.project.PjWorkshop;
-
-import java.awt.*;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 
 public class Genus extends PjWorkshop {
 
