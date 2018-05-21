@@ -18,7 +18,8 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 	
 	private enum MenuEntry{
 		MyWorkshop			("MyWorkshop..."),
-		Registration		("Surface Registration...")
+		Registration		("Surface Registration..."),
+		Genus				("Genus Computator 2000")
 		// Additional entries...
 		;
 		protected final String name;
@@ -40,7 +41,7 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 		super.init(anObject);
 		m_elementSet = (PgElementSet)anObject;
 		
-		String menuDev = "My Workshops";
+		String menuDev = "Floris Tim Jesse Awesome Tools";
 		addMenu(menuDev);
 		for (MenuEntry entry : MenuEntry.values()) {
 			addMenuItem(menuDev, entry.name);
@@ -87,6 +88,18 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 			dialog = new PjWorkshop_Dialog(false);
 			dialog.setParent(reg);
 			dialog.update(reg);
+			dialog.setVisible(true);
+			break;
+		case Genus:
+			Genus genus = new Genus();
+			genus.setGeometry(m_elementSet);
+			if (currDisp == null) {
+				if (PsDebug.WARNING) PsDebug.warning("missing display.");
+			} else
+				genus.setDisplay(currDisp);
+			dialog = new PjWorkshop_Dialog(false);
+			dialog.setParent(genus);
+			dialog.update(genus);
 			dialog.setVisible(true);
 			break;
 		}
