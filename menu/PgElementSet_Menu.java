@@ -20,7 +20,8 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 		MyWorkshop			("MyWorkshop..."),
 		Registration		("Surface Registration..."),
 		Genus				("Genus Computator 2000"),
-		Volume				("Volume Megatron 10X")
+		Volume				("Volume Megatron 10X"),
+		ConnectedComponents ("Connected Component Enumerator 7000")
 		// Additional entries...
 		;
 		protected final String name;
@@ -115,6 +116,18 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 			dialog.update(volume);
 			dialog.setVisible(true);
 			break;
+		case ConnectedComponents:
+		    ConnectedComponents cc = new ConnectedComponents();
+		    cc.setGeometry(m_elementSet);
+		    if (currDisp == null) {
+                if (PsDebug.WARNING) PsDebug.warning("missing display.");
+            } else
+                cc.setDisplay(currDisp);
+            dialog = new PjWorkshop_Dialog(false);
+            dialog.setParent(cc);
+            dialog.update(cc);
+            dialog.setVisible(true);
+            break;
 		}
 		
 		return true;
