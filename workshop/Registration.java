@@ -1,7 +1,7 @@
 package workshop;
 
 import java.awt.Color;
-import java.util.Vector;
+import java.util.*;
 
 import jv.geom.PgBndPolygon;
 import jv.geom.PgElementSet;
@@ -51,6 +51,61 @@ public class Registration extends PjWorkshop {
 	public void setGeometries(PgElementSet surfP, PgElementSet surfQ) {
 		m_surfP = surfP;
 		m_surfQ = surfQ;
+	}
+
+	/** Register surface Q with respect to P */
+	public void register() {
+		if (m_surfP == null || m_surfQ == null) return;
+
+		PdVector[] allP = m_surfP.getVertices();
+		PdVector[] allQ = m_surfQ.getVertices();
+		List<PdVector> subsetP = getSubset(allP,5);
+
+		Map<PdVector, PdVector> closestPairs = findClosestPairs(subsetP, allQ);
+
+		PdVector centroidP = m_surfP.getCenterOfGravity();
+		PdVector centroidQ = m_surfQ.getCenterOfGravity();
+	}
+
+	private Map<PdVector, PdVector> findClosestPairs(Collection<PdVector> subsetP, PdVector[] allQ) {
+		Map<PdVector, PdVector> closestPairs = new HashMap();
+		for (PdVector p : subsetP) {
+			PdVector closest = null;
+			double closestDistance = 0;
+
+			for (PdVector q : allQ) {
+				double distance = PdVector.subNew(p, q).length();
+				if (closest == null || distance < closestDistance) {
+					closest = q;
+					closestDistance = distance;
+				}
+			}
+
+			closestPairs.put(p, closest);
+
+			System.out.println(p.toString() + " matched with " + closest.toString());
+		}
+		return closestPairs;
+	}
+
+	private List<PdVector> getSubset(PdVector[] vertices, int n) {
+		Random rand = new Random(System.currentTimeMillis());
+
+		int totalNumberOfVertices = vertices.length;
+
+		List<PdVector> subset = new ArrayList();
+		Set<Integer> selectedIndices = new HashSet();
+
+		while (subset.size() < n) {
+			int index;
+			do {
+				index = rand.nextInt(totalNumberOfVertices);
+			} while (selectedIndices.contains(index));
+			selectedIndices.add(index);
+			subset.add(vertices[index]);
+		}
+
+		return subset;
 	}
 	
 	
