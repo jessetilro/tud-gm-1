@@ -13,6 +13,7 @@ import jv.object.PsConfig;
 import jv.object.PsDebug;
 import jv.object.PsObject;
 import jv.project.PgGeometry;
+import jv.vecmath.PdMatrix;
 import jv.vecmath.PdVector;
 import jv.vecmath.PiVector;
 import jv.vecmath.PuMath;
@@ -65,6 +66,31 @@ public class Registration extends PjWorkshop {
 
 		PdVector centroidP = m_surfP.getCenterOfGravity();
 		PdVector centroidQ = m_surfQ.getCenterOfGravity();
+
+		PdMatrix covarianceMatrix = new PdMatrix(3, 3);
+		for (Map.Entry<PdVector, PdVector> pair : closestPairs.entrySet()) {
+			PdVector pDiff = PdVector.subNew(pair.getKey(), centroidP);
+			PdVector qDiff = PdVector.subNew(pair.getValue(), centroidQ);
+
+			// Super nasty manual multiplication between vector and transposed vector
+			// because the javaview API sucks really bad!
+			PdVector[] cols = new PdVector[3];
+			for (int i = 0; i < 3; i++) {
+				PdVector col = (PdVector) pDiff.clone();
+				col.multScalar(qDiff.getEntry(i));
+				cols[i] = col;
+			}
+
+			PdMatrix matrix = new PdMatrix(3, 3);
+			for (int j = 0; j < 3; j++) {
+				for (int i = 0; i < 3; i++) {
+					matrix.setEntry(i, j, cols[j].getEntry(i));
+				}
+			}
+
+			covarianceMatrix.add(matrix);
+		}
+		covarianceMatrix.multScalar(1D / (double) closestPairs.size());
 	}
 
 	private Map<PdVector, PdVector> findClosestPairs(Collection<PdVector> subsetP, PdVector[] allQ) {
