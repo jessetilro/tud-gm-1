@@ -25,20 +25,20 @@ public class ConnectedComponents_IP extends PjWorkshop_IP implements ActionListe
     
     public void init() {
         super.init();
-        setTitle("CONNECTED COMPONENT COUNTOR XXX3.14XXX");
+        setTitle("Connected Component Enumerator 7000");
     }
     
     public String getNotice() {
-        return "Press \"Count connents.";
+        return "Press the \"Count\" button!";
     }
     
     public void setParent(PsUpdateIf parent) {
         super.setParent(parent);
         m_ws = (ConnectedComponents)parent;
     
-        addSubTitle("Surface an.");
+        addSubTitle("Tool to count the number of connected components.");
         
-        m_bCountComponents = new Button("Count cons");
+        m_bCountComponents = new Button("Count");
         m_bCountComponents.addActionListener(this);
 
         m_tComponents = new TextField("-- resulting number of components --");

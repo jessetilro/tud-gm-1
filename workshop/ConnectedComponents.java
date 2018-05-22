@@ -33,6 +33,7 @@ public class ConnectedComponents extends PjWorkshop {
     public int countComponents() {
         int numComponents = 1;
         PiVector[] elements = m_geom.getElements();
+        PiVector[] neighbours = m_geom.getNeighbours();
         
         // Initiate collections to keep track of visited and unvisited elements.
         HashSet<Integer> visited = new HashSet<Integer>();
@@ -47,23 +48,25 @@ public class ConnectedComponents extends PjWorkshop {
         toTraverse.add(0);
         
         while(!unvisited.isEmpty()) {
+            
             // Main loop. Traverse through the traversal list sequentially.
             int currentIndex = toTraverse.poll();
             unvisited.remove(currentIndex);
             visited.add(currentIndex);
-            
             PiVector currentElement = elements[currentIndex];
 //            if (!(currentIndex == currentElement.getEntry(0))) {
 //                return -1;
 //            }
+            
             assert(currentIndex == currentElement.getEntry(0));
             
             // Get the neighbours of the current element and add them to the queue
-            PiVector neighbours = m_geom.getNeighbour(currentIndex);
-            if (neighbours != null) {
-                for (int i = 0; i < neighbours.getSize(); i++) {
-                    int neighbourIndex = neighbours.getEntry(i);
-                    if (!visited.contains(neighbourIndex) && !toTraverse.contains(neighbourIndex)) {
+            PiVector neighbourV = m_geom.getNeighbour(currentIndex);
+            
+            if (neighbourV != null) {
+                for (int i = 0; i < neighbourV.getSize(); i++) {
+                    int neighbourIndex = neighbourV.getEntry(i);
+                    if ((neighbourIndex != -1) && (!visited.contains(neighbourIndex)) && (!toTraverse.contains(neighbourIndex))) {
                         toTraverse.add(neighbourIndex);
                     }
                 }
