@@ -5,4 +5,5 @@ menu/*.class
 # IntelliJ IDEA IDE local config files
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+**/.idea/misc.xml
 *.iws
