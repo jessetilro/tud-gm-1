@@ -17,8 +17,8 @@ import workshop.*;
 public class PgElementSet_Menu extends PgPointSet_Menu {
 	
 	private enum MenuEntry{
-		MyWorkshop			("MyWorkshop..."),
-		Registration		("Surface Registration..."),
+		MyWorkshop			("Color All The Things Machine"),
+		Registration		("Surface Registrator Deluxe"),
 		Genus				("Genus Computator 2000")
 		// Additional entries...
 		;

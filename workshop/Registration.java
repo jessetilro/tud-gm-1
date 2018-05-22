@@ -48,7 +48,7 @@ public class Registration extends PjWorkshop {
 	
 	/** Constructor */
 	public Registration() {
-		super("Surface Registration");
+		super("Surface Registrator Deluxe");
 		if (getClass() == Registration.class) {
 			init();
 		}
