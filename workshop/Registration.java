@@ -65,32 +65,12 @@ public class Registration extends PjWorkshop {
 		Map<PdVector, PdVector> closestPairs = findClosestPairs(subsetP, allQ);
 
 		PdVector centroidP = m_surfP.getCenterOfGravity();
+		System.out.println("Centroid P = " + centroidP.toString());
 		PdVector centroidQ = m_surfQ.getCenterOfGravity();
+		System.out.println("Centroid Q = " + centroidQ.toString());
 
-		PdMatrix covarianceMatrix = new PdMatrix(3, 3);
-		for (Map.Entry<PdVector, PdVector> pair : closestPairs.entrySet()) {
-			PdVector pDiff = PdVector.subNew(pair.getKey(), centroidP);
-			PdVector qDiff = PdVector.subNew(pair.getValue(), centroidQ);
-
-			// Super nasty manual multiplication between vector and transposed vector
-			// because the javaview API sucks really bad!
-			PdVector[] cols = new PdVector[3];
-			for (int i = 0; i < 3; i++) {
-				PdVector col = (PdVector) pDiff.clone();
-				col.multScalar(qDiff.getEntry(i));
-				cols[i] = col;
-			}
-
-			PdMatrix matrix = new PdMatrix(3, 3);
-			for (int j = 0; j < 3; j++) {
-				for (int i = 0; i < 3; i++) {
-					matrix.setEntry(i, j, cols[j].getEntry(i));
-				}
-			}
-
-			covarianceMatrix.add(matrix);
-		}
-		covarianceMatrix.multScalar(1D / (double) closestPairs.size());
+		PdMatrix covarianceMatrix = computeCovarianceMatrix(closestPairs, centroidP, centroidQ);
+		System.out.println("Covariance matrix = " + covarianceMatrix.toString());
 	}
 
 	private Map<PdVector, PdVector> findClosestPairs(Collection<PdVector> subsetP, PdVector[] allQ) {
@@ -132,6 +112,35 @@ public class Registration extends PjWorkshop {
 		}
 
 		return subset;
+	}
+
+	private PdMatrix computeCovarianceMatrix(Map<PdVector, PdVector> closestPairs, PdVector centroidP, PdVector centroidQ) {
+		PdMatrix covarianceMatrix = new PdMatrix(3, 3);
+		for (Map.Entry<PdVector, PdVector> pair : closestPairs.entrySet()) {
+			PdVector pDiff = PdVector.subNew(pair.getKey(), centroidP);
+			PdVector qDiff = PdVector.subNew(pair.getValue(), centroidQ);
+
+			// Super nasty manual multiplication between vector and transposed vector
+			// because the javaview API sucks really bad!
+			PdVector[] cols = new PdVector[3];
+			for (int i = 0; i < 3; i++) {
+				PdVector col = (PdVector) pDiff.clone();
+				col.multScalar(qDiff.getEntry(i));
+				cols[i] = col;
+			}
+
+			PdMatrix matrix = new PdMatrix(3, 3);
+			for (int j = 0; j < 3; j++) {
+				for (int i = 0; i < 3; i++) {
+					matrix.setEntry(i, j, cols[j].getEntry(i));
+				}
+			}
+
+			covarianceMatrix.add(matrix);
+		}
+		covarianceMatrix.multScalar(1D / (double) closestPairs.size());
+
+		return covarianceMatrix;
 	}
 	
 	
