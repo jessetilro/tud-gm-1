@@ -3,6 +3,8 @@ package workshop;
 import java.awt.Color;
 import java.util.*;
 
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
 import jv.geom.PgBndPolygon;
 import jv.geom.PgElementSet;
 import jv.geom.PgPolygonSet;
@@ -31,7 +33,7 @@ public class Registration extends PjWorkshop {
 	/** First surface to be registered. */	
 	PgElementSet	m_surfP;	
 	/** Second surface to be registered. */
-	PgElementSet	m_surfQ;	
+	PgElementSet	m_surfQ;
 	
 	
 	/** Constructor */
@@ -71,6 +73,38 @@ public class Registration extends PjWorkshop {
 
 		PdMatrix covarianceMatrix = computeCovarianceMatrix(closestPairs, centroidP, centroidQ);
 		System.out.println("Covariance matrix = " + covarianceMatrix.toString());
+
+		Matrix matrix = convertPdMatrixToJama(covarianceMatrix);
+		SingularValueDecomposition svd = new SingularValueDecomposition(matrix);
+		Matrix U = svd.getU();
+		Matrix V = svd.getV();
+		Matrix D = svd.getS();
+
+		double detVUT = V.times(U.transpose()).det();
+		double[][] diagonalRows = {{1, 0, 0}, {0, 1, 0}, {0, 0, detVUT}};
+		Matrix diagonal = new Matrix(diagonalRows);
+		Matrix R = V.times(diagonal).times(U.transpose());
+
+		System.out.println("Rotation matrix = ");
+		for (int j = 0; j < 3; j++) {
+			for (int i = 0; i < 3; i++) {
+				System.out.print(R.get(i, j) + "\t");
+			}
+			System.out.println();
+		}
+		System.out.println();
+
+		Matrix qc = convertPdVectorToJama(centroidQ);
+		Matrix pc = convertPdVectorToJama(centroidP);
+		Matrix t = qc.minus(R.times(pc));
+
+		System.out.println("Translation vector = ");
+		for (int i = 0; i < 3; i++) {
+			System.out.println(t.get(i, 0));
+		}
+		System.out.println();
+
+
 	}
 
 	private Map<PdVector, PdVector> findClosestPairs(Collection<PdVector> subsetP, PdVector[] allQ) {
@@ -142,6 +176,16 @@ public class Registration extends PjWorkshop {
 
 		return covarianceMatrix;
 	}
-	
-	
+
+	private Matrix convertPdMatrixToJama(PdMatrix matrix) {
+		double[][] entries = matrix.getEntries();
+		Matrix newMatrix = new Matrix(entries);
+		return newMatrix;
+	}
+
+	private Matrix convertPdVectorToJama(PdVector vector) {
+		double[] entries = vector.getEntries();
+		Matrix newMatrix = new Matrix(entries, 3);
+		return newMatrix;
+	}
 }
