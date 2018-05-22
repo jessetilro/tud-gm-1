@@ -34,6 +34,16 @@ public class Registration extends PjWorkshop {
 	PgElementSet	m_surfP;	
 	/** Second surface to be registered. */
 	PgElementSet	m_surfQ;
+
+	/** Optimal rotation matrix */
+	Matrix			R;
+	/** Optimal translation vector */
+	Matrix			t;
+
+	/** Number of vertices to sample from surface P */
+	int 			n = 100;
+	/** Number of iterations of the registration algorithm to perform */
+	int				iterations = 10;
 	
 	
 	/** Constructor */
@@ -54,15 +64,40 @@ public class Registration extends PjWorkshop {
 	public void setGeometries(PgElementSet surfP, PgElementSet surfQ) {
 		m_surfP = surfP;
 		m_surfQ = surfQ;
+
+		// Cap sample size to total number of vertices in surface P
+		int numP = m_surfP.getNumVertices();
+		if (n > numP) {
+			n = numP;
+		}
 	}
 
 	/** Register surface Q with respect to P */
 	public void register() {
 		if (m_surfP == null || m_surfQ == null) return;
 
+		for (int iteration = 0; iteration < iterations; iteration++) {
+			// Compute optimal rotation matrix and translation vector
+			computeOptimalRotationAndTranslation();
+
+			// Apply optimal rotation matrix and translation vector to surface Q
+			for (int i = 0; i < m_surfP.getNumVertices(); i++) {
+				PdVector q = m_surfP.getVertex(i);
+				Matrix vertex = convertPdVectorToJama(q);
+				Matrix newP = R.times(vertex).plus(t);
+
+				m_surfP.setVertex(i, newP.get(0, 0), newP.get(1, 0), newP.get(2, 0));
+				// System.out.println("Updating position of vertex " + i + " to \t" + newP.get(0, 0) + "\t" + newP.get(1, 0) + "\t" + newP.get(2, 0));
+			}
+		}
+	}
+
+	public void computeOptimalRotationAndTranslation() {
+		if (m_surfP == null || m_surfQ == null) return;
+
 		PdVector[] allP = m_surfP.getVertices();
 		PdVector[] allQ = m_surfQ.getVertices();
-		List<PdVector> subsetP = getSubset(allP,5);
+		List<PdVector> subsetP = getSubset(allP, n);
 
 		Map<PdVector, PdVector> closestPairs = findClosestPairs(subsetP, allQ);
 
@@ -83,7 +118,8 @@ public class Registration extends PjWorkshop {
 		double detVUT = V.times(U.transpose()).det();
 		double[][] diagonalRows = {{1, 0, 0}, {0, 1, 0}, {0, 0, detVUT}};
 		Matrix diagonal = new Matrix(diagonalRows);
-		Matrix R = V.times(diagonal).times(U.transpose());
+
+		R = V.times(diagonal).times(U.transpose());
 
 		System.out.println("Rotation matrix = ");
 		for (int j = 0; j < 3; j++) {
@@ -96,15 +132,14 @@ public class Registration extends PjWorkshop {
 
 		Matrix qc = convertPdVectorToJama(centroidQ);
 		Matrix pc = convertPdVectorToJama(centroidP);
-		Matrix t = qc.minus(R.times(pc));
+
+		t = qc.minus(R.times(pc));
 
 		System.out.println("Translation vector = ");
 		for (int i = 0; i < 3; i++) {
 			System.out.println(t.get(i, 0));
 		}
 		System.out.println();
-
-
 	}
 
 	private Map<PdVector, PdVector> findClosestPairs(Collection<PdVector> subsetP, PdVector[] allQ) {
@@ -122,8 +157,6 @@ public class Registration extends PjWorkshop {
 			}
 
 			closestPairs.put(p, closest);
-
-			System.out.println(p.toString() + " matched with " + closest.toString());
 		}
 		return closestPairs;
 	}
