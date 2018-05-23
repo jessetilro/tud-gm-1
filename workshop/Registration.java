@@ -201,8 +201,10 @@ public class Registration extends PjWorkshop {
 
 	private PdMatrix computeCovarianceMatrix(Map<PdVector, PdVector> closestPairs, PdVector centroidP, PdVector centroidQ, double medianPairDistance) {
 		PdMatrix covarianceMatrix = new PdMatrix(3, 3);
+		int n = closestPairs.size();
 		for (Map.Entry<PdVector, PdVector> pair : closestPairs.entrySet()) {
 		    if (tooFar(pair.getKey(), pair.getValue(), medianPairDistance)) {
+		        n--;
 		        continue;
 		    }
 		    
