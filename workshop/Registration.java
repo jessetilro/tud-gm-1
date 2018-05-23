@@ -42,6 +42,8 @@ public class Registration extends PjWorkshop {
 
 	/** Number of vertices to sample from surface P */
 	int 			n = 100;
+	/** Parameter determining which points to remove */
+	double          k = 2.0;
 	/** Number of iterations of the registration algorithm to perform */
 	int				iterations = 10;
 	
@@ -98,15 +100,19 @@ public class Registration extends PjWorkshop {
 		PdVector[] allP = m_surfP.getVertices();
 		PdVector[] allQ = m_surfQ.getVertices();
 		List<PdVector> subsetP = getSubset(allP, n);
-
-		Map<PdVector, PdVector> closestPairs = findClosestPairs(subsetP, allQ);
-
+		
+		ArrayList<Double> pairDistances = new ArrayList<Double>(subsetP.size());
+		Map<PdVector, PdVector> closestPairs = findClosestPairs(subsetP, allQ, pairDistances);
+		
+		Collections.sort(pairDistances);
+		double medianPairDistance = calcMedianPairDistance(pairDistances);
+		
 		PdVector centroidP = m_surfP.getCenterOfGravity();
 		System.out.println("Centroid P = " + centroidP.toString());
 		PdVector centroidQ = m_surfQ.getCenterOfGravity();
 		System.out.println("Centroid Q = " + centroidQ.toString());
-
-		PdMatrix covarianceMatrix = computeCovarianceMatrix(closestPairs, centroidP, centroidQ);
+		
+		PdMatrix covarianceMatrix = computeCovarianceMatrix(closestPairs, centroidP, centroidQ, medianPairDistance);
 		System.out.println("Covariance matrix = " + covarianceMatrix.toString());
 
 		Matrix matrix = convertPdMatrixToJama(covarianceMatrix);
@@ -142,8 +148,9 @@ public class Registration extends PjWorkshop {
 		System.out.println();
 	}
 
-	private Map<PdVector, PdVector> findClosestPairs(Collection<PdVector> subsetP, PdVector[] allQ) {
+	private Map<PdVector, PdVector> findClosestPairs(Collection<PdVector> subsetP, PdVector[] allQ, List<Double> pairDistances) {
 		Map<PdVector, PdVector> closestPairs = new HashMap();
+		int index = 0;
 		for (PdVector p : subsetP) {
 			PdVector closest = null;
 			double closestDistance = 0;
@@ -155,12 +162,23 @@ public class Registration extends PjWorkshop {
 					closestDistance = distance;
 				}
 			}
-
 			closestPairs.put(p, closest);
+			pairDistances.add(closestDistance);
+			index++;
 		}
 		return closestPairs;
 	}
-
+	
+	private double calcMedianPairDistance(List<Double> distances) {
+	    double median = 0;
+	    if (distances.size() % 2 == 0) {
+	        median = (double) distances.get((distances.size() / 2) - 1) + distances.get(distances.size() / 2) / 2.0;
+	    } else {
+	        median = distances.get(distances.size() / 2 );
+	    }
+	    return median;
+	}
+	
 	private List<PdVector> getSubset(PdVector[] vertices, int n) {
 		Random rand = new Random(System.currentTimeMillis());
 
@@ -181,9 +199,15 @@ public class Registration extends PjWorkshop {
 		return subset;
 	}
 
-	private PdMatrix computeCovarianceMatrix(Map<PdVector, PdVector> closestPairs, PdVector centroidP, PdVector centroidQ) {
+	private PdMatrix computeCovarianceMatrix(Map<PdVector, PdVector> closestPairs, PdVector centroidP, PdVector centroidQ, double medianPairDistance) {
 		PdMatrix covarianceMatrix = new PdMatrix(3, 3);
+		int n = closestPairs.size();
 		for (Map.Entry<PdVector, PdVector> pair : closestPairs.entrySet()) {
+		    if (tooFar(pair.getKey(), pair.getValue(), medianPairDistance)) {
+		        n--;
+		        continue;
+		    }
+		    
 			PdVector pDiff = PdVector.subNew(pair.getKey(), centroidP);
 			PdVector qDiff = PdVector.subNew(pair.getValue(), centroidQ);
 
@@ -209,7 +233,15 @@ public class Registration extends PjWorkshop {
 
 		return covarianceMatrix;
 	}
-
+	
+	private boolean tooFar(PdVector p, PdVector q, double median) {
+	    double distance = PdVector.subNew(p, q).length();
+	    if (distance > (k * median)) {
+	        return true;
+	    }
+	    return false;
+	}
+	
 	private Matrix convertPdMatrixToJama(PdMatrix matrix) {
 		double[][] entries = matrix.getEntries();
 		Matrix newMatrix = new Matrix(entries);
