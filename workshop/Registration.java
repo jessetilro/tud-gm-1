@@ -43,7 +43,7 @@ public class Registration extends PjWorkshop {
 	/** Number of vertices to sample from surface P */
 	int 			n = 100;
 	/** Parameter determining which points to remove */
-	double             k = 0.8;
+	double          k = 2.0;
 	/** Number of iterations of the registration algorithm to perform */
 	int				iterations = 10;
 	
