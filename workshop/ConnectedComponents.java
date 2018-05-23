@@ -44,19 +44,14 @@ public class ConnectedComponents extends PjWorkshop {
         
         // Initiate FIFO queue to traverse the vertices and initialize vertex 0 as root.
         LinkedList<Integer> toTraverse = new LinkedList<Integer>();
-        
         toTraverse.add(0);
         
         while(!unvisited.isEmpty()) {
-            
             // Main loop. Traverse through the traversal list sequentially.
             int currentIndex = toTraverse.poll();
             unvisited.remove(currentIndex);
             visited.add(currentIndex);
             PiVector currentElement = elements[currentIndex];
-//            if (!(currentIndex == currentElement.getEntry(0))) {
-//                return -1;
-//            }
             
             assert(currentIndex == currentElement.getEntry(0));
             
