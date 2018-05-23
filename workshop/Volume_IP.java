@@ -57,8 +57,8 @@ public class Volume_IP extends PjWorkshop_IP implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         Object source = event.getSource();
         if (source == m_bComputeVolume) {
-            int volume = m_ws.computeVolume();
-            m_tVolume.setText(Integer.toString(volume));
+            double volume = m_ws.computeVolume();
+            m_tVolume.setText(Double.toString(volume));
             return;
         }
     }

@@ -76,7 +76,7 @@ public class Registration_IP extends PjWorkshop_IP implements ActionListener{
 		add(pGeometries);
 		
 		Panel pSetSurfaces = new Panel(new BorderLayout());
-		m_bSetSurfaces = new Button("Set selected surfaces");
+		m_bSetSurfaces = new Button("Register selected surfaces");
 		m_bSetSurfaces.addActionListener(this);
 		pSetSurfaces.add(m_bSetSurfaces, BorderLayout.CENTER);
 		add(pSetSurfaces);
@@ -126,6 +126,7 @@ public class Registration_IP extends PjWorkshop_IP implements ActionListener{
 		if (source == m_bSetSurfaces) {
 			m_registration.setGeometries((PgElementSet)m_geomList.elementAt(m_listActive.getSelectedIndex()),
 			(PgElementSet)m_geomList.elementAt(m_listPassive.getSelectedIndex()));
+			m_registration.register();
 			return;
 		}
 	}

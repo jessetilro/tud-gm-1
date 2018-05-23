@@ -15,10 +15,10 @@ import jvx.project.PjWorkshop_Dialog;
 import workshop.*;
 
 public class PgElementSet_Menu extends PgPointSet_Menu {
-	
+
 	private enum MenuEntry{
-		MyWorkshop			("MyWorkshop..."),
-		Registration		("Surface Registration..."),
+		MyWorkshop			("Color All The Things Machine"),
+		Registration		("Surface Registrator Deluxe"),
 		Genus				("Genus Computator 2000"),
 		Volume				("Volume Megatron 10X"),
 		ConnectedComponents ("Connected Component Enumerator 7000")
@@ -26,30 +26,30 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 		;
 		protected final String name;
 		MenuEntry(String name) { this.name  = name; }
-		
+
 		public static MenuEntry fromName(String name){
 			for (MenuEntry entry : MenuEntry.values()) {
 				if(entry.name.equals(name)) return entry;
 			}
 			return null;
 		}
-	}	
-	
+	}
+
 	protected PgElementSet m_elementSet;
-	
+
 	protected PvViewerIf m_viewer;
 
 	public void init(PsObject anObject) {
 		super.init(anObject);
 		m_elementSet = (PgElementSet)anObject;
-		
+
 		String menuDev = "Floris Tim Jesse Awesome Tools";
 		addMenu(menuDev);
 		for (MenuEntry entry : MenuEntry.values()) {
 			addMenuItem(menuDev, entry.name);
 		}
 	}
-	
+
 	public boolean applyMethod(String aMethod) {
 		if (super.applyMethod(aMethod))
 			return true;
@@ -129,12 +129,12 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
             dialog.setVisible(true);
             break;
 		}
-		
+
 		return true;
 	}
-	
+
 	public PvViewerIf getViewer() { return m_viewer; }
 
-	public void setViewer(PvViewerIf viewer) { m_viewer = viewer; }		
-	
-}	
+	public void setViewer(PvViewerIf viewer) { m_viewer = viewer; }
+
+}

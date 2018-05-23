@@ -15,7 +15,7 @@ public class MyWorkshop extends PjWorkshop {
 	PgElementSet m_geomSave;
 	
 	public MyWorkshop() {
-		super("My Workshop");
+		super("Color All The Things Machine");
 		init();
 	}
 	
