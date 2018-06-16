@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE jvx-model SYSTEM "http://www.javaview.de/rsrc/jvx.dtd">
+<jvx-model>
+	<meta generator="JavaView v4.22.010"/>
+	<meta dtd="3.01"/>
+	<meta date="Sat Jun 16 16:14:26 CEST 2018"/>
+	<version type="dump">0.10</version>
+	<title>Surface with Prescribed Genus[148]</title>
+	<geometries>
+		<geometry name="Surface with Prescribed Genus[148]">
+			<pointSet point="hide" dim="3">
+				<points num="5">
+					<p>0.0 0.0 0.3</p>
+					<p>0.8337194158806127 1.5702181090444352 0.23245450558845387</p>
+					<p>0.8333352592287866 0.7461960103561095 -0.0937376869799958</p>
+					<p>0.8333184648612891 0.7824316738469554 0.7072105015407587</p>
+					<p>1.666666666666667 0.0 0.3</p>
+					<thickness>2.0</thickness>
+					<color type="rgb">255 0 0</color>
+					<colorTag type="rgb">255 0 255</colorTag>
+				</points>
+				<normals num="5">
+					<n>-0.42696968135451135 0.23387056379172572 -0.8734995424130269</n>
+					<n>0.6964730046515759 0.7168504244538516 -0.03241639634411269</n>
+					<n>0.443554961346786 -0.03873263613571938 -0.8954098386563715</n>
+					<n>0.4435471951012297 0.03830335833867216 0.8954321517891853</n>
+					<n>0.42700072486901236 0.23367876395332768 -0.8735356983195266</n>
+					<thickness>1.0</thickness>
+					<length>0.5</length>
+					<color type="rgb">255 255 0</color>
+				</normals>
+			</pointSet>
+			<faceSet edge="show" face="show">
+				<faces num="8">
+					<f>2 1 3</f>
+					<f>2 3 1</f>
+					<f>0 2 4</f>
+					<f>4 2 1</f>
+					<f>1 2 0</f>
+					<f>0 4 3</f>
+					<f>4 1 3</f>
+					<f>1 0 3</f>
+					<color type="rgb">150 220 255</color>
+					<colorTag type="rgb">255 0 255</colorTag>
+					<creaseAngle>3.2</creaseAngle>
+				</faces>
+				<neighbours num="8">
+					<nb>-1 1 -1</nb>
+					<nb>-1 -1 0</nb>
+					<nb>3 5 4</nb>
+					<nb>-1 6 2</nb>
+					<nb>2 7 -1</nb>
+					<nb>6 7 2</nb>
+					<nb>-1 5 3</nb>
+					<nb>5 -1 4</nb>
+				</neighbours>
+				<edges>
+					<thickness>1.0</thickness>
+					<color type="rgb">0 0 0</color>
+					<colorTag type="rgb">255 0 255</colorTag>
+				</edges>
+				<normals num="8">
+					<n>0.9999998823660313 -4.8314990827631044E-4 4.282626954579856E-5</n>
+					<n>-0.9999998823660313 4.8314990827631044E-4 -4.282626954579856E-5</n>
+					<n>0.0 -0.4666770530417522 -0.8844277970327852</n>
+					<n>0.6094350350483708 0.2915693989152685 -0.7372762193857739</n>
+					<n>-0.6096520090663251 0.2919993360305864 -0.7369266012291115</n>
+					<n>0.0 -0.46166151019429846 0.8870561707158796</n>
+					<n>0.6701637819711117 0.3828512049091773 0.6358501869416783</n>
+					<n>-0.6703545930304046 0.38326275085199824 0.635400962709689</n>
+					<thickness>1.0</thickness>
+					<length>0.5</length>
+					<color type="rgb">255 255 0</color>
+				</normals>
+			</faceSet>
+			<bndbox visible="hide">
+				<p>0.0 0.0 -0.0937376869799958</p>
+				<p>1.666666666666667 1.5702181090444352 0.7072105015407587</p>
+			</bndbox>
+			<center visible="hide">
+				<p>0.0 0.0 0.0</p>
+			</center>
+		</geometry>
+	</geometries>
+</jvx-model>

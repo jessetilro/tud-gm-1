@@ -53,6 +53,7 @@ public class DifferentialCoordinates extends PjWorkshop {
             PdMatrix elementary = computeElementaryMatrix(i, vertices);
             elementaryFillG(G, elementary, i, vertices);
         }
+        System.out.println("Gradient matrix: " + G);
         return G;
     }
     
@@ -98,13 +99,14 @@ public class DifferentialCoordinates extends PjWorkshop {
         PdVector firstV = vertices[0];
         PdVector secondV = vertices[1];
         PdVector thirdV = vertices[2];
-
+        System.out.println("vertex: " + firstV);
         PdVector e1 = PdVector.subNew(thirdV, secondV);
         PdVector e2 = PdVector.subNew(firstV, thirdV);
         PdVector e3 = PdVector.subNew(secondV, firstV);
-        
-        PdVector normal = m_geom.getElementNormal(faceIndex);
-        
+        System.out.println("Side: " + e1);
+        PdVector normal = PdVector.crossNew(e1, e2);
+        normal.normalize();
+        System.out.println("Normal: " + normal);
         PdVector[] cols = new PdVector[3];
         
         PdVector col1 = PdVector.crossNew(normal, e1);
