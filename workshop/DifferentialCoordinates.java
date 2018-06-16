@@ -1,6 +1,9 @@
 package workshop;
 
+import java.util.Hashtable;
+
 import jv.geom.PgElementSet;
+import jv.geom.PgPointSet;
 import jv.project.PgGeometry;
 import jv.vecmath.PdMatrix;
 import jv.vecmath.PdVector;
@@ -30,6 +33,16 @@ public class DifferentialCoordinates extends PjWorkshop {
     @Override
     public void setGeometry(PgGeometry geom) {
         super.setGeometry(geom);
+        PgPointSet ps = new PgPointSet(3);
+        
+        PgElementSet es = new PgElementSet(1);
+        es.setNumVertices(3);
+        es.setVertex(1, 1, 1);
+        es.setVertex(2, 1, 1);
+        es.setVertex(1, 2, 1);
+        es.setNumElements(1);
+        es.setElement(0, 0, 1, 2);
+        // m_geom = es;
         m_geom      = (PgElementSet)super.m_geom;
         m_geomSave  = (PgElementSet)super.m_geomSave;
         elements = m_geom.getElements();
@@ -54,6 +67,7 @@ public class DifferentialCoordinates extends PjWorkshop {
             elementaryFillG(G, elementary, i, vertices);
         }
         System.out.println("Gradient matrix: " + G);
+        System.out.println("Gradient vector: " + calculateVector(G));
         return G;
     }
     
@@ -88,10 +102,31 @@ public class DifferentialCoordinates extends PjWorkshop {
         return cLaplace;
     }
     
-//    public PnSparseMatrix computeMassMatrix() {
-//        PnSparseMatrix massMatrix = PnSparseMatrix(V, V, 1);
-//        
-//    }
+    public PnSparseMatrix computeMassMatrix() {
+        PnSparseMatrix massMatrix = PnSparseMatrix(V, V, 1);
+        
+        // Initialize hashtable keeping track of vertex mass
+        Hashtable<Double, Double> mass = new Hashtable<Double, Double>();
+        for(int i = 0; i < V; i++) {
+            mass.put(i, 0.0);
+        }
+        
+        // Iterate over all faces and add its surface area to eacht of the participating vertices
+        for(int i = 0; i < F; i++) {
+            PdVector element = elements[i];
+            double area = m_geom.getAreaOfElement(i);
+            for(double index : element.getEntries()) {
+                mass.put(index, mass.get(index) + area)
+            }
+        }
+        
+        // Fill in mass matrix with mass table values divided by 3.
+        for(int i = 0; i < V; i++) {
+            massMatrix.addEntry(i, i, mass.get(i) / 3.0);
+        }
+        
+        return massMatrix();
+    }
     
     public PdMatrix computeElementaryMatrix(int faceIndex, PdVector[] vertices) {
         double length = 1/(2 * m_geom.getAreaOfElement(faceIndex));
@@ -99,11 +134,16 @@ public class DifferentialCoordinates extends PjWorkshop {
         PdVector firstV = vertices[0];
         PdVector secondV = vertices[1];
         PdVector thirdV = vertices[2];
-        System.out.println("vertex: " + firstV);
+        System.out.println("vertex: " + secondV);
         PdVector e1 = PdVector.subNew(thirdV, secondV);
         PdVector e2 = PdVector.subNew(firstV, thirdV);
         PdVector e3 = PdVector.subNew(secondV, firstV);
-        System.out.println("Side: " + e1);
+        System.out.println("Side e1: " + e1);
+        System.out.println("Side e2: " + e2);
+        System.out.println("Side e3: " + e3);
+        System.out.println("length e1: " + e1.length());
+        System.out.println("length e2: " + e2.length());
+        System.out.println("length e3: " + e3.length());
         PdVector normal = PdVector.crossNew(e1, e2);
         normal.normalize();
         System.out.println("Normal: " + normal);
@@ -132,6 +172,7 @@ public class DifferentialCoordinates extends PjWorkshop {
         
         PdMatrix elementaryMatrix = new PdMatrix(3);
         elementaryMatrix.setColumns(cols);
+        System.out.println("Elementary: " + elementaryMatrix);
         return elementaryMatrix;
     }
     
@@ -139,8 +180,18 @@ public class DifferentialCoordinates extends PjWorkshop {
         // Fill in sparse matrix with elementary matrix according to face index + offset and vertex index
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                G.addEntry(faceIndex * 3, elements[faceIndex].getEntries()[i], elementary.getEntry(j, i));
+                System.out.println("vertex indices?: " + elements[faceIndex].getEntries()[i]);
+                G.addEntry(faceIndex * 3 + j, elements[faceIndex].getEntries()[i], elementary.getEntry(j, i));
             }
         }
+    }
+    
+    public PdVector calculateVector(PnSparseMatrix G) {
+        double[] function = new double[3];
+        function[0] = 0.0008;
+        function[1] = 0.0;
+        function[2] = 0.5564;
+        PdVector functionVals = new PdVector(function);
+        return PnSparseMatrix.rightMultVector(G, functionVals, null);
     }
 }
