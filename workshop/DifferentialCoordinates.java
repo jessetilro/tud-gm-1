@@ -26,30 +26,28 @@ public class DifferentialCoordinates extends PjWorkshop {
         super.init();
     }
 
-    public int computeDifferentialCoordinates() {
+    public PnSparseMatrix computeGradientMatrix() {
         // Edge count provided by API
         int E = m_geom.getNumEdges();
         // Face count provided by API
         int F = m_geom.getNumElements();
         // Vertex count provided by API
         int V = m_geom.getNumVertices();
-
-        int X = V - E + F;
-        int g = 1 - ( X / 2 );
-
-        // Debugging, left it in since why not
-        System.out.println("E (Edges) = " + E);
-        System.out.println("V (Vertices) = " + V);
-        System.out.println("F (Faces) = " + F);
-        System.out.println("X (Euler characteristic) = " + X);
-        System.out.println("g (Genus) = " + g);
-
-        return g;
+        
+        // Create sparse gradient matrix
+        PnSparseMatrix G = PnSparseMatrix(3*F, V, 3);
+        
+        // Fill in sparse gradient matrix
+        for (int i = 0; i < F; i++) {
+            PiVector vertices = m_geom.getElementVertices(i);
+            PdMatrix elementary = computeElementaryMatrix(i, vertices);
+            elementaryFillG(G, elementary, vertices);
+        }
+        return G;
     }
     
-    public PdMatrix computeElementaryMatrix(int faceIndex) {
+    public PdMatrix computeElementaryMatrix(int faceIndex, PiVector vertices) {
         double length = 1/(2 * m_geom.getAreaOfElement(faceIndex));
-        PiVector vertices = m_geom.getElementVertices(faceIndex);
         
         PdVector firstV = vertices[0];
         PdVector secondV = vertices[1];
@@ -69,5 +67,14 @@ public class DifferentialCoordinates extends PjWorkshop {
         PdMatrix elementaryMatrix = new PdMatrix(3);
         elementaryMatrix.setColumn(cols);
         return elementaryMatrix;
+    }
+    
+    public void elementaryFillG(PnSparseMatrix G, PdMatrix elementary, int faceIndex, PiVector vertices) {
+        // Fill in sparse matrix with elementary matrix according to face index + offset and vertex index
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3 j++) {
+                G.addEntry(j, vertices[i]);
+            }
+        }
     }
 }
