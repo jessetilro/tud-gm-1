@@ -21,7 +21,8 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 		Registration		("Surface Registrator Deluxe"),
 		Genus				("Genus Computator 2000"),
 		Volume				("Volume Megatron 10X"),
-		ConnectedComponents ("Connected Component Enumerator 7000")
+		ConnectedComponents ("Connected Component Enumerator 7000"),
+		DifferentialCoordinates ("AdasfdFADSFASD")
 		// Additional entries...
 		;
 		protected final String name;
@@ -128,7 +129,19 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
             dialog.update(cc);
             dialog.setVisible(true);
             break;
-		}
+	    case DifferentialCoordinates:
+	        DifferentialCoordinates dc = new DifferentialCoordinates();
+            dc.setGeometry(m_elementSet);
+            if (currDisp == null) {
+                if (PsDebug.WARNING) PsDebug.warning("missing display.");
+            } else
+                dc.setDisplay(currDisp);
+            dialog = new PjWorkshop_Dialog(false);
+            dialog.setParent(dc);
+            dialog.update(dc);
+            dialog.setVisible(true);
+            break;
+        }
 
 		return true;
 	}
