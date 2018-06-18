@@ -103,20 +103,20 @@ public class DifferentialCoordinates extends PjWorkshop {
     }
     
     public PnSparseMatrix computeMassMatrix() {
-        PnSparseMatrix massMatrix = PnSparseMatrix(V, V, 1);
+        PnSparseMatrix massMatrix = new PnSparseMatrix(V, V, 1);
         
         // Initialize hashtable keeping track of vertex mass
-        Hashtable<Double, Double> mass = new Hashtable<Double, Double>();
+        Hashtable<Integer, Double> mass = new Hashtable<Integer, Double>();
         for(int i = 0; i < V; i++) {
             mass.put(i, 0.0);
         }
         
         // Iterate over all faces and add its surface area to eacht of the participating vertices
         for(int i = 0; i < F; i++) {
-            PdVector element = elements[i];
+            PiVector element = elements[i];
             double area = m_geom.getAreaOfElement(i);
-            for(double index : element.getEntries()) {
-                mass.put(index, mass.get(index) + area)
+            for(int index : element.getEntries()) {
+                mass.put(index, mass.get(index) + area);
             }
         }
         
@@ -125,7 +125,7 @@ public class DifferentialCoordinates extends PjWorkshop {
             massMatrix.addEntry(i, i, mass.get(i) / 3.0);
         }
         
-        return massMatrix();
+        return massMatrix;
     }
     
     public PdMatrix computeElementaryMatrix(int faceIndex, PdVector[] vertices) {
