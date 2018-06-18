@@ -22,7 +22,7 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
 		Genus				("Genus Computator 2000"),
 		Volume				("Volume Megatron 10X"),
 		ConnectedComponents ("Connected Component Enumerator 7000"),
-		DifferentialCoordinates ("AdasfdFADSFASD")
+		DifferentialCoordinates ("Differntial Coordinates")
 		// Additional entries...
 		;
 		protected final String name;

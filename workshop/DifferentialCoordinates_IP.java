@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionListener {
 
     protected Button m_bDifferentialCoordinates;
-    protected TextField m_tDifferentialCoordinates;
+    protected TextArea m_tDifferentialCoordinates;
     protected PuDouble m_xOff;
 
     DifferentialCoordinates m_ws;
@@ -27,23 +27,23 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
     
     public void init() {
         super.init();
-        setTitle("aaaaaaaaaaaa");
+        setTitle("Differntial Coordinates");
     }
     
     public String getNotice() {
-        return "Press the \"Count\" button!";
+        return "Press the \"Compute\" buttons!";
     }
     
     public void setParent(PsUpdateIf parent) {
         super.setParent(parent);
         m_ws = (DifferentialCoordinates)parent;
     
-        addSubTitle("Tool to count the number of connected components.");
+        addSubTitle("Tool to compute sparse matrix G, cotangent matrix S, laplace matrix L, and more.");
         
-        m_bDifferentialCoordinates = new Button("Count");
+        m_bDifferentialCoordinates = new Button("Compute sparse matrix G");
         m_bDifferentialCoordinates.addActionListener(this);
 
-        m_tDifferentialCoordinates = new TextField("-- resulting number of components --");
+        m_tDifferentialCoordinates = new TextArea("-- sparse matrix G --");
 
         Panel panel1 = new Panel(new FlowLayout(FlowLayout.CENTER));
         panel1.add(m_bDifferentialCoordinates);
@@ -61,6 +61,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         Object source = event.getSource();
         if (source == m_bDifferentialCoordinates) {
             PnSparseMatrix gradientMatrix = m_ws.computeGradientMatrix();
+            m_tDifferentialCoordinates.setText(gradientMatrix.toShortString());
             return;
         }
     }
