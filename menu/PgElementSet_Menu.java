@@ -136,9 +136,11 @@ public class PgElementSet_Menu extends PgPointSet_Menu {
                 if (PsDebug.WARNING) PsDebug.warning("missing display.");
             } else
                 dc.setDisplay(currDisp);
+
             dialog = new PjWorkshop_Dialog(false);
             dialog.setParent(dc);
             dialog.update(dc);
+            dialog.setSize(600, 1000);
             dialog.setVisible(true);
             break;
         }
