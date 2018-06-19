@@ -161,22 +161,23 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             PdVector[] gs = m_ws.computeGradientVectorStacks(gradientMatrix, vs);
             PdVector[] gts = m_ws.computeTransformedGradientVectorStacks(gs, transformationMatrix);
 
-            String output = "=== Gradient Matrix ===\n" + gradientMatrix.toString() + "\n";
-
-            output += "=== Vertex Position Vector Stacks ===\n";
-            for (int i = 0; i < 3; i++) {
-                output += "v_" + dims[i] + vs[i].toShortString() + "\n";
-            }
-
-            output += "=== Gradient Vector Stacks ===\n";
-            for (int i = 0; i < 3; i++) {
-                output += "g_" + dims[i] + gs[i].toShortString() + "\n";
-            }
-
-            output += "=== Transformed Gradient Vector Stacks ===\n";
-            for (int i = 0; i < 3; i++) {
-                output += "gt_" + dims[i] + gts[i].toShortString() + "\n";
-            }
+            String output = "";
+            // String output = "=== Gradient Matrix ===\n" + gradientMatrix.toString() + "\n";
+            //
+            // output += "=== Vertex Position Vector Stacks ===\n";
+            // for (int i = 0; i < 3; i++) {
+            //     output += "v_" + dims[i] + vs[i].toShortString() + "\n";
+            // }
+            //
+            // output += "=== Gradient Vector Stacks ===\n";
+            // for (int i = 0; i < 3; i++) {
+            //     output += "g_" + dims[i] + gs[i].toShortString() + "\n";
+            // }
+            //
+            // output += "=== Transformed Gradient Vector Stacks ===\n";
+            // for (int i = 0; i < 3; i++) {
+            //     output += "gt_" + dims[i] + gts[i].toShortString() + "\n";
+            // }
 
             PnSparseMatrix M_v = m_ws.computeMv();
 
@@ -195,10 +196,10 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
                 PnMumpsSolver.solve(A, x_y, b_y, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
                 PnMumpsSolver.solve(A, x_z, b_z, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
 
-                output += "=== Solution ===\n";
-                output += "vt_x = " + x_x.toShortString() + "\n";
-                output += "vt_y = " + x_y.toShortString() + "\n";
-                output += "vt_z = " + x_z.toShortString() + "\n";
+                // output += "=== Solution ===\n";
+                // output += "vt_x = " + x_x.toShortString() + "\n";
+                // output += "vt_y = " + x_y.toShortString() + "\n";
+                // output += "vt_z = " + x_z.toShortString() + "\n";
 
                 PdVector[] vts = {x_x, x_y, x_z};
 
