@@ -171,7 +171,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
                 output += "gt_" + dims[i] + gts[i].toShortString() + "\n";
             }
 
-            PnSparseMatrix M_v = m_ws.computeMassMatrix();
+            PnSparseMatrix M_v = m_ws.computeMv();
 
             // Euler-Lagrange equation: Ax = b in 3 dimensions
             PnSparseMatrix A = PnSparseMatrix.multMatrices(G.transposeNew(), PnSparseMatrix.multMatrices(M_v, G, new PnSparseMatrix()), new PnSparseMatrix());
