@@ -22,6 +22,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
     protected Button buttonComputeS;
     protected Button buttonComputeMass;
     protected Button buttonComputeL;
+    protected Button buttonReset;
     protected TextArea textAreaG;
     protected TextArea textAreaS;
     protected TextArea textAreaMass;
@@ -136,6 +137,12 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         panel3.add(testTextArea);
         add(panel3);
 
+        Panel panel4 = new Panel();
+        panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
+        buttonReset = new Button("Reset");
+        buttonReset.addActionListener(this);
+        panel4.add(buttonReset);
+        add(panel4);
     }
 
     /**
@@ -239,6 +246,11 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         if (source == buttonComputeInput) {
             testTextArea.setText(getInputMatrix().toShortString());
             return;
+        }
+        if (source == buttonReset) {
+          m_ws.m_geom = m_ws.m_geomSave;
+          m_ws.m_geom.update(m_ws.m_geom);
+          return;
         }
     }
 
