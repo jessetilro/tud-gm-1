@@ -54,8 +54,14 @@ public class DifferentialCoordinates extends PjWorkshop {
         V = m_geom.getNumVertices();
         neighboursList = m_geom.getNeighbours();
     }
-    
-    public void init() {        
+
+    public void updateGeometry(PdVector[] vts) {
+      for (int i = 0; i < 3 * F; i++) {
+        m_geom.setVertex(i, vts[0].getEntry(i), vts[1].getEntry(i), vts[2].getEntry(i));
+      }
+    }
+
+    public void init() {
         super.init();
     }
 

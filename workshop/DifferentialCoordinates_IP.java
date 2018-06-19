@@ -184,9 +184,18 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             PdVector x_z = new PdVector(3 * m_ws.F);
 
             try {
-                //PnMumpsSolver.solve(A, x_x, b_x, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
+                PnMumpsSolver.solve(A, x_x, b_x, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
+                PnMumpsSolver.solve(A, x_y, b_y, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
+                PnMumpsSolver.solve(A, x_z, b_z, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
 
-                output += "=== Solution ===\n" + x_x.toShortString();
+                output += "=== Solution ===\n";
+                output += "vt_x = " + x_x.toShortString() + "\n";
+                output += "vt_y = " + x_y.toShortString() + "\n";
+                output += "vt_z = " + x_z.toShortString() + "\n";
+
+                PdVector[] vts = {x_x, x_y, x_z};
+                m_ws.updateGeometry(vts);
+                m_ws.m_geom.update(m_ws.m_geom);
             } catch(Exception e) {
                 e.printStackTrace();
                 System.out.println("System could not be solved, please refer to stacktrace above.");
