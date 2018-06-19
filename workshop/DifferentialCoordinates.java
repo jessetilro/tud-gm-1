@@ -59,35 +59,6 @@ public class DifferentialCoordinates extends PjWorkshop {
         super.init();
     }
 
-//    public PdVector[] computeTransformedGradientVectorStacksAlt(PdMatrix transformationMatrix) {
-//        PdVector g_x = new PdVector(F);
-//        PdVector g_y = new PdVector(F);
-//        PdVector g_z = new PdVector(F);
-//
-//        // compute (transformed) gradient vectors per face and stack the coordinates
-//        for (int i = 0; i < F; i++) {
-//            PiVector element = m_geom.getElement(i);
-//            boolean selected = element.hasTag(PsObject.IS_SELECTED);
-//
-//            PdVector[] vertices = m_geom.getElementVertices(i);
-//            PdVector gradientVector = computeGradientVector(i, vertices);
-//
-//            if (selected) {
-//                gradientVector = gradientVector.leftMultMatrix(transformationMatrix);
-//            }
-//
-//            System.out.println("Gradient vector for face " + i);
-//            System.out.println(gradientVector);
-//
-//            g_x.setEntry(i, gradientVector.getEntry(0));
-//            g_y.setEntry(i, gradientVector.getEntry(1));
-//            g_z.setEntry(i, gradientVector.getEntry(2));
-//        }
-//
-//        PdVector[] gradientVectorStacks = {g_x, g_y, g_z};
-//        return gradientVectorStacks;
-//    }
-
     public PdVector[] computeGradientVectorStacks(PnSparseMatrix G, PdVector[] vs) {
         PdVector v_x = vs[0];
         PdVector v_y = vs[1];
@@ -243,23 +214,6 @@ public class DifferentialCoordinates extends PjWorkshop {
         
         return massMatrix;
     }
-
-//    public PdVector computeGradientVector(int faceIndex, PdVector[] vertices) {
-//        PdMatrix elementaryMatrix = computeElementaryMatrix(faceIndex, vertices);
-//        PdVector u = computeUVector(vertices);
-//
-//        return u.leftMultMatrix(elementaryMatrix);
-//    }
-//
-//    public PdVector computeUVector(PdVector[] vertices) {
-//        PdVector u = new PdVector(3);
-//        u.setEntry(0, vertices[0].getEntry(1));
-//        u.setEntry(1, vertices[1].getEntry(1));
-//        u.setEntry(2, vertices[2].getEntry(1));
-//
-//        System.out.println("U vector: " + u);
-//        return u;
-//    }
 
     public PdVector[] computeElementaryMatrixCols(int faceIndex, PdVector[] vertices) {
         double length = 1/(2 * m_geom.getAreaOfElement(faceIndex));
