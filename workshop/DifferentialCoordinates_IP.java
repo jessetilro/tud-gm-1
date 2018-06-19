@@ -194,6 +194,33 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
                 output += "vt_z = " + x_z.toShortString() + "\n";
 
                 PdVector[] vts = {x_x, x_y, x_z};
+
+                // translate solution to original centroid
+                PdVector centroidOriginal = DifferentialCoordinates.computeCentroid(vs);
+                PdVector centroidAfterSolving = DifferentialCoordinates.computeCentroid(vts);
+
+                output += "Centroid Original: " + centroidOriginal.toShortString() + "\n";
+                output += "Centroid After Solving: " + centroidAfterSolving.toShortString() + "\n";
+                
+                PdVector translation = PdVector.subNew(centroidBefore, centroidAfter);
+
+                String xCoordAfterSolving = x_x.toShortString();
+
+                // x_x.add(translation.getEntry(0));
+                // x_y.add(translation.getEntry(1));
+                // x_z.add(translation.getEntry(2));
+
+                PdVector centroidAfterTranslation = DifferentialCoordinates.computeCentroid(vts);
+
+                output += "Centroid After Translation: " + centroidAfterTranslation.toShortString() + "\n";
+
+                output += "Translation: " + translation.toShortString() + "\n";
+
+                output += "X coords Original............:" + vs[0].toShortString() + "\n";
+                output += "X Coords After Solving.......: " + x_x.toShortString() + "\n";
+                output += "X Coords After Translation...: " + x_x.toShortString() + "\n";
+
+
                 m_ws.updateGeometry(vts);
                 m_ws.m_geom.update(m_ws.m_geom);
             } catch(Exception e) {
