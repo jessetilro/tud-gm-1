@@ -165,8 +165,6 @@ public class DifferentialCoordinates extends PjWorkshop {
             PdMatrix elementary = computeElementaryMatrix(i, vertices);
             elementaryFillG(G, elementary, i, vertices);
         }
-        System.out.println("Gradient matrix: " + G);
-        System.out.println("Gradient vector: " + calculateVector(G));
         return G;
     }
     
@@ -207,8 +205,7 @@ public class DifferentialCoordinates extends PjWorkshop {
                 }
             }
         }
-        
-        System.out.println("neighbours: " + neighboursList.length);
+
         // Fill in combinatorial Laplace matrix
         for (int i = 0; i < V; i++) {
             HashSet<Integer> neighbours = vertexNeighbours.get(i);
@@ -270,19 +267,11 @@ public class DifferentialCoordinates extends PjWorkshop {
         PdVector firstV = vertices[0];
         PdVector secondV = vertices[1];
         PdVector thirdV = vertices[2];
-        System.out.println("vertex: " + secondV);
         PdVector e1 = PdVector.subNew(thirdV, secondV);
         PdVector e2 = PdVector.subNew(firstV, thirdV);
         PdVector e3 = PdVector.subNew(secondV, firstV);
-        System.out.println("Side e1: " + e1);
-        System.out.println("Side e2: " + e2);
-        System.out.println("Side e3: " + e3);
-        System.out.println("length e1: " + e1.length());
-        System.out.println("length e2: " + e2.length());
-        System.out.println("length e3: " + e3.length());
         PdVector normal = PdVector.crossNew(e1, e2);
         normal.normalize();
-        System.out.println("Normal: " + normal);
         PdVector[] cols = new PdVector[3];
 
         PdVector col1 = PdVector.crossNew(normal, e1);
@@ -314,7 +303,6 @@ public class DifferentialCoordinates extends PjWorkshop {
         
         PdMatrix elementaryMatrix = new PdMatrix(3);
         elementaryMatrix.setColumns(cols);
-        System.out.println("Elementary: " + elementaryMatrix);
         return elementaryMatrix;
     }
     
@@ -322,7 +310,6 @@ public class DifferentialCoordinates extends PjWorkshop {
         // Fill in sparse matrix with elementary matrix according to face index + offset and vertex index
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                System.out.println("vertex indices?: " + elements[faceIndex].getEntries()[i]);
                 G.addEntry(faceIndex * 3 + j, elements[faceIndex].getEntries()[i], elementary.getEntry(j, i));
             }
         }
