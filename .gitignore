@@ -7,3 +7,5 @@ menu/*.class
 **/.idea/tasks.xml
 **/.idea/misc.xml
 *.iws
+
+/out
