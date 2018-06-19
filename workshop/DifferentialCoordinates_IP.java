@@ -80,7 +80,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         buttonComputeL = new Button("Compute laplace matrix L");
         buttonComputeL.addActionListener(this);
 
-        textAreaG = new TextArea("-- sparse matrix G --", 4, 20);
+        textAreaG = new TextArea("-- sparse matrix G --", 16, 20);
         textAreaS = new TextArea("-- cotangent S --", 4, 20);
         textAreaMass = new TextArea("-- mass matrix M --", 4, 20);
         textAreaL = new TextArea("-- laplace matrix L --", 4, 20);
@@ -105,23 +105,23 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         Panel panel2 = new Panel();
 
         panel2.setLayout(new GridLayout(3,3));
-        textFieldG1 = new TextField();
+        textFieldG1 = new TextField("1");
         panel2.add(textFieldG1);
-        textFieldG2 = new TextField();
+        textFieldG2 = new TextField("0");
         panel2.add(textFieldG2);
-        textFieldG3 = new TextField();
+        textFieldG3 = new TextField("0");
         panel2.add(textFieldG3);
-        textFieldG4 = new TextField();
+        textFieldG4 = new TextField("0");
         panel2.add(textFieldG4);
-        textFieldG5 = new TextField();
+        textFieldG5 = new TextField("1");
         panel2.add(textFieldG5);
-        textFieldG6 = new TextField();
+        textFieldG6 = new TextField("0");
         panel2.add(textFieldG6);
-        textFieldG7 = new TextField();
+        textFieldG7 = new TextField("0");
         panel2.add(textFieldG7);
-        textFieldG8 = new TextField();
+        textFieldG8 = new TextField("0");
         panel2.add(textFieldG8);
-        textFieldG9 = new TextField();
+        textFieldG9 = new TextField("1");
         panel2.add(textFieldG9);
         add(panel2);
 
@@ -145,9 +145,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         if (source == buttonComputeG) {
             gradientMatrix = m_ws.computeGradientMatrix();
 
-            PdMatrix transformationMatrix = new PdMatrix(3);
-            transformationMatrix.setIdentity();
-            transformationMatrix.multScalar(2);
+            PdMatrix transformationMatrix = getInputMatrix();
 
             PdVector[] vs = m_ws.computeVertexPositionVectorStacks();
             PdVector[] gs = m_ws.computeGradientVectorStacks(gradientMatrix, vs);
@@ -193,21 +191,30 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             return;
         }
         if (source == buttonComputeInput) {
-            PdMatrix inputMatrix = new PdMatrix(3);
-            inputMatrix.addEntry(0, 0, evaluateTextField(textFieldG1));
-            inputMatrix.addEntry(0, 1, evaluateTextField(textFieldG2));
-            inputMatrix.addEntry(0, 2, evaluateTextField(textFieldG3));
-
-            inputMatrix.addEntry(1, 0, evaluateTextField(textFieldG4));
-            inputMatrix.addEntry(1, 1, evaluateTextField(textFieldG5));
-            inputMatrix.addEntry(1, 2, evaluateTextField(textFieldG6));
-
-            inputMatrix.addEntry(2, 0, evaluateTextField(textFieldG7));
-            inputMatrix.addEntry(2, 1, evaluateTextField(textFieldG8));
-            inputMatrix.addEntry(2, 2, evaluateTextField(textFieldG9));
-            testTextArea.setText(inputMatrix.toShortString());
+            testTextArea.setText(getInputMatrix().toShortString());
             return;
         }
+    }
+
+    /**
+     * Returns the matrix represented by the form input
+     * @return
+     */
+    protected PdMatrix getInputMatrix() {
+        PdMatrix inputMatrix = new PdMatrix(3);
+        inputMatrix.addEntry(0, 0, evaluateTextField(textFieldG1));
+        inputMatrix.addEntry(0, 1, evaluateTextField(textFieldG2));
+        inputMatrix.addEntry(0, 2, evaluateTextField(textFieldG3));
+
+        inputMatrix.addEntry(1, 0, evaluateTextField(textFieldG4));
+        inputMatrix.addEntry(1, 1, evaluateTextField(textFieldG5));
+        inputMatrix.addEntry(1, 2, evaluateTextField(textFieldG6));
+
+        inputMatrix.addEntry(2, 0, evaluateTextField(textFieldG7));
+        inputMatrix.addEntry(2, 1, evaluateTextField(textFieldG8));
+        inputMatrix.addEntry(2, 2, evaluateTextField(textFieldG9));
+
+        return inputMatrix;
     }
 
     /**
