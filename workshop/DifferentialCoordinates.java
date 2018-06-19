@@ -83,7 +83,7 @@ public class DifferentialCoordinates extends PjWorkshop {
     }
 
     public void updateGeometry(PdVector[] vts) {
-      for (int i = 0; i < 3 * F; i++) {
+      for (int i = 0; i < V; i++) {
         m_geom.setVertex(i, vts[0].getEntry(i), vts[1].getEntry(i), vts[2].getEntry(i));
       }
     }
