@@ -1,2 +1,3 @@
-sh ./compile.sh
-sh ./run.sh
+#!/bin/sh
+
+./compile_and_run.sh
