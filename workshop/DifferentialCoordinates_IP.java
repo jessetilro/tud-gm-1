@@ -179,9 +179,9 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             PdVector b_y = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[1], new PdVector());
             PdVector b_z = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[2], new PdVector());
 
-            PdVector x_x = new PdVector(3 * m_ws.F);
-            PdVector x_y = new PdVector(3 * m_ws.F);
-            PdVector x_z = new PdVector(3 * m_ws.F);
+            PdVector x_x = new PdVector(m_ws.V);
+            PdVector x_y = new PdVector(m_ws.V);
+            PdVector x_z = new PdVector(m_ws.V);
 
             try {
                 PnMumpsSolver.solve(A, x_x, b_x, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
@@ -201,14 +201,15 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
 
                 output += "Centroid Original: " + centroidOriginal.toShortString() + "\n";
                 output += "Centroid After Solving: " + centroidAfterSolving.toShortString() + "\n";
+                output += "aaaaaaaaaaaaaaaaaaaaaa: " + vts[0].toShortString() + "\n";
                 
-                PdVector translation = PdVector.subNew(centroidBefore, centroidAfter);
+                PdVector translation = PdVector.subNew(centroidOriginal, centroidAfterSolving);
 
                 String xCoordAfterSolving = x_x.toShortString();
 
-                // x_x.add(translation.getEntry(0));
-                // x_y.add(translation.getEntry(1));
-                // x_z.add(translation.getEntry(2));
+                 x_x.add(translation.getEntry(0));
+                 x_y.add(translation.getEntry(1));
+                 x_z.add(translation.getEntry(2));
 
                 PdVector centroidAfterTranslation = DifferentialCoordinates.computeCentroid(vts);
 

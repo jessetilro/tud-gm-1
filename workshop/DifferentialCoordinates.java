@@ -68,6 +68,9 @@ public class DifferentialCoordinates extends PjWorkshop {
 
     public static PdVector computeCentroid(PdVector[] v) {
       int V = v[0].getSize();
+      System.out.println("SIZE X IS:   " + V);
+      System.out.println("SIZE Y IS:   " + v[1].getSize());
+      System.out.println("SIZE Z IS:   " + v[2].getSize());
 
       PdVector centroid = new PdVector(3);
       for (int i = 0; i < V; i++) {
@@ -140,6 +143,7 @@ public class DifferentialCoordinates extends PjWorkshop {
 
     public PdVector[] computeVertexPositionVectorStacks() {
         PdVector v_x = new PdVector(V);
+        System.out.println("Initial V: " + V);
         PdVector v_y = new PdVector(V);
         PdVector v_z = new PdVector(V);
 
