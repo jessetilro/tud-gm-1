@@ -115,9 +115,9 @@ public class DifferentialCoordinates extends PjWorkshop {
     }
 
     public PdVector[] computeVertexPositionVectorStacks() {
-        PdVector v_x = new PdVector(F);
-        PdVector v_y = new PdVector(F);
-        PdVector v_z = new PdVector(F);
+        PdVector v_x = new PdVector(V);
+        PdVector v_y = new PdVector(V);
+        PdVector v_z = new PdVector(V);
 
         // compute position vectors per vertex and stack the coordinates
         for (int i = 0; i < V; i++) {
