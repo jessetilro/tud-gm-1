@@ -55,6 +55,30 @@ public class DifferentialCoordinates extends PjWorkshop {
         neighboursList = m_geom.getNeighbours();
     }
 
+    public PdVector computeCentroid() {
+      PdVector centroid = new PdVector(3);
+      for (int i = 0; i < V; i++) {
+        PdVector vertex = m_geom.getVertex(i);
+        centroid.add(vertex);
+      }
+      centroid.multScalar(1.0d / (double) V);
+
+      return centroid;
+    }
+
+    public static PdVector computeCentroid(PdVector[] v) {
+      int V = v[0].getSize();
+
+      PdVector centroid = new PdVector(3);
+      for (int i = 0; i < V; i++) {
+        PdVector vertex = new PdVector(v[0].getEntry(i), v[1].getEntry(i), v[2].getEntry(i));
+        centroid.add(vertex);
+      }
+      centroid.multScalar(1.0d / (double) V);
+
+      return centroid;
+    }
+
     public void updateGeometry(PdVector[] vts) {
       for (int i = 0; i < 3 * F; i++) {
         m_geom.setVertex(i, vts[0].getEntry(i), vts[1].getEntry(i), vts[2].getEntry(i));
