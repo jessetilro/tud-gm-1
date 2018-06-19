@@ -4,6 +4,8 @@ import jv.number.PuDouble;
 import jv.object.PsDialog;
 import jv.object.PsUpdateIf;
 
+import jv.vecmath.PdMatrix;
+import jv.vecmath.PdVector;
 import jvx.project.PjWorkshop_IP;
 import jvx.numeric.PnSparseMatrix;
 
@@ -35,7 +37,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
     
     public void init() {
         super.init();
-        setTitle("Differntial Coordinates");
+        setTitle("Differential Coordinates");
         gradientMatrix = null;
     }
     
@@ -86,11 +88,37 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
      * Handle action events fired by buttons etc.
      */
     public void actionPerformed(ActionEvent event) {
+        String[] dims = {"x", "y", "z"};
         Object source = event.getSource();
         if (source == buttonComputeG) {
             gradientMatrix = m_ws.computeGradientMatrix();
-            textAreaG.setText(gradientMatrix.toString());
 
+            PdMatrix transformationMatrix = new PdMatrix(3);
+            transformationMatrix.setIdentity();
+            transformationMatrix.multScalar(2);
+
+            PdVector[] vs = m_ws.computeVertexPositionVectorStacks();
+            PdVector[] gs = m_ws.computeGradientVectorStacks(gradientMatrix, vs);
+            PdVector[] gts = m_ws.computeTransformedGradientVectorStacks(gs, transformationMatrix);
+
+            String output = "=== Gradient Matrix ===\n" + gradientMatrix.toString() + "\n";
+
+            output += "=== Vertex Position Vector Stacks ===\n";
+            for (int i = 0; i < 3; i++) {
+                output += "v_" + dims[i] + vs[i].toShortString() + "\n";
+            }
+
+            output += "=== Gradient Vector Stacks ===\n";
+            for (int i = 0; i < 3; i++) {
+                output += "g_" + dims[i] + gs[i].toShortString() + "\n";
+            }
+
+            output += "=== Transformed Gradient Vector Stacks ===\n";
+            for (int i = 0; i < 3; i++) {
+                output += "gt_" + dims[i] + gts[i].toShortString() + "\n";
+            }
+
+            textAreaG.setText(output);
             return;
         }
         if (source == buttonComputeS) {
