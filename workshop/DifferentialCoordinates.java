@@ -1,5 +1,7 @@
 package workshop;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 
 import jv.geom.PgElementSet;
@@ -90,14 +92,35 @@ public class DifferentialCoordinates extends PjWorkshop {
     
     public PnSparseMatrix computeCombinatorialLaplace() {
         PnSparseMatrix cLaplace = new PnSparseMatrix(V, V);
+        
+        // Initialize hashtable with hashsets to keep track of neighbours.
+        Hashtable<Integer, HashSet<Integer>> vertexNeighbours = new Hashtable<Integer, HashSet<Integer>>();
         for (int i = 0; i < V; i++) {
-            PiVector neighbours = neighboursList[i];
-            int degree = neighbours.m_data.length;
-            double iets = -1.0 / degree;
-            for (int j = 0; j < degree; j++) {
-                cLaplace.addEntry(i, j, iets); 
+            vertexNeighbours.put(i, new HashSet<Integer>());
+        }
+        
+        // Calculate degree of vertices
+        for (int i = 0; i < F; i++) {
+            ArrayList<Integer> vertices = new ArrayList<Integer>();
+            for (int v1 : elements[i].getEntries()) {
+                for (int v2 : elements[i].getEntries()) {
+                    if (v1 != v2) {
+                        vertexNeighbours.get(v1).add(v2);
+                    }
+                }
             }
-            cLaplace.addEntry(i, 1, -1); 
+        }
+        
+        System.out.println("neighbours: " + neighboursList.length);
+        // Fill in combinatorial Laplace matrix
+        for (int i = 0; i < V; i++) {
+            HashSet<Integer> neighbours = vertexNeighbours.get(i);
+            int degree = neighbours.size();
+            double iets = -1.0 / degree;
+            for (int neighbour : neighbours) {
+                cLaplace.addEntry(i, neighbour, iets); 
+            }
+            cLaplace.addEntry(i, i, 1); 
         }
         return cLaplace;
     }
@@ -110,7 +133,6 @@ public class DifferentialCoordinates extends PjWorkshop {
         for(int i = 0; i < V; i++) {
             mass.put(i, 0.0);
         }
-        
         // Iterate over all faces and add its surface area to eacht of the participating vertices
         for(int i = 0; i < F; i++) {
             PiVector element = elements[i];
