@@ -14,6 +14,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import dev6.numeric.PnMumpsSolver;
+
 public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionListener {
 
     protected Button buttonComputeG;
@@ -143,7 +145,8 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         String[] dims = {"x", "y", "z"};
         Object source = event.getSource();
         if (source == buttonComputeG) {
-            gradientMatrix = m_ws.computeGradientMatrix();
+            PnSparseMatrix G = m_ws.computeGradientMatrix();
+            gradientMatrix = G;
 
             PdMatrix transformationMatrix = getInputMatrix();
 
@@ -166,6 +169,27 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             output += "=== Transformed Gradient Vector Stacks ===\n";
             for (int i = 0; i < 3; i++) {
                 output += "gt_" + dims[i] + gts[i].toShortString() + "\n";
+            }
+
+            PnSparseMatrix M_v = m_ws.computeMassMatrix();
+
+            // Euler-Lagrange equation: Ax = b in 3 dimensions
+            PnSparseMatrix A = PnSparseMatrix.multMatrices(G.transposeNew(), PnSparseMatrix.multMatrices(M_v, G, new PnSparseMatrix()), new PnSparseMatrix());
+            PdVector b_x = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[0], new PdVector());
+            PdVector b_y = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[1], new PdVector());
+            PdVector b_z = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[2], new PdVector());
+
+            PdVector x_x = new PdVector(3 * m_ws.F);
+            PdVector x_y = new PdVector(3 * m_ws.F);
+            PdVector x_z = new PdVector(3 * m_ws.F);
+
+            try {
+                //PnMumpsSolver.solve(A, x_x, b_x, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
+
+                output += "=== Solution ===\n" + x_x.toShortString();
+            } catch(Exception e) {
+                e.printStackTrace();
+                System.out.println("System could not be solved, please refer to stacktrace above.");
             }
 
             textAreaG.setText(output);
