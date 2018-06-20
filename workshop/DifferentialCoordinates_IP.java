@@ -306,12 +306,12 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
     
     /**
      * Add 3 vector fields using x,y, and z gradients.
-     * Only z is visible initially.
+     * Only z is visible initially
      */
     protected void addVectorFields() {
-        PgVectorField vfx = new PgVectorField(m_ws.F, PgVectorField.ELEMENT_BASED);
-        PgVectorField vfy = new PgVectorField(m_ws.F, PgVectorField.ELEMENT_BASED);
-        PgVectorField vfz = new PgVectorField(m_ws.F, PgVectorField.ELEMENT_BASED);
+        PgVectorField vfx = new PgVectorField(3, PgVectorField.ELEMENT_BASED);
+        PgVectorField vfy = new PgVectorField(3, PgVectorField.ELEMENT_BASED);
+        PgVectorField vfz = new PgVectorField(3, PgVectorField.ELEMENT_BASED);
 
         vfx.setNumVectors(m_ws.F);
         vfy.setNumVectors(m_ws.F);
@@ -328,6 +328,15 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             vfz.setVector(i, vecNewz);
         }
         vfx.showVectorArrows(true);
+        vfy.showVectorArrows(true);
+        vfz.showVectorArrows(true);
+        
+        vfx.setName("Gradient vectors x");
+        vfy.setName("Gradient vectors y");
+        vfz.setName("Gradient vectors z");
+        if (m_ws.m_geom.getNumVectorFields() == 3) {
+            m_ws.m_geom.removeAllVectorFields();
+        }
         m_ws.m_geom.addVectorField(vfx);
         m_ws.m_geom.addVectorField(vfy);
         m_ws.m_geom.addVectorField(vfz);
