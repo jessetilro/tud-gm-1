@@ -1,9 +1,11 @@
 package workshop;
 
+import jv.geom.PgElementSet;
 import jv.number.PuDouble;
 import jv.object.PsDialog;
 import jv.object.PsUpdateIf;
 
+import jv.project.PgGeometry;
 import jv.vecmath.PdMatrix;
 import jv.vecmath.PdVector;
 import jvx.project.PjWorkshop_IP;
@@ -13,8 +15,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 
 import dev6.numeric.PnMumpsSolver;
+import menu.PgElementSet_Menu;
 
 public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionListener {
 
@@ -45,6 +51,8 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
     protected PnSparseMatrix gradientMatrix;
     DifferentialCoordinates m_ws;
 
+    private Deque<PgElementSet> geomChanges;
+
     public DifferentialCoordinates_IP() {
         super();
         if (getClass() == DifferentialCoordinates_IP.class)
@@ -64,6 +72,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
     public void setParent(PsUpdateIf parent) {
         super.setParent(parent);
         m_ws = (DifferentialCoordinates) parent;
+        geomChanges = new LinkedList<>();
 
         addSubTitle("Tool to compute sparse matrix G, cotangent matrix S, laplace matrix L, and more.");
 
@@ -252,7 +261,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
 
                 //PdVector centroidAfterTranslation = DifferentialCoordinates.computeCentroid(vts);
 
-                m_ws.updateGeometry(vts);
+                geomChanges.push(m_ws.updateGeometry(vts, true));
                 m_ws.m_geom.update(m_ws.m_geom);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -261,8 +270,11 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             return;
         }
         if (source == buttonReset) {
-            m_ws.m_geom = m_ws.m_geomSave;
-            m_ws.m_geom.update(m_ws.m_geom);
+            if(!geomChanges.isEmpty()){
+                m_ws.updateGeometryVertices(geomChanges.pop());
+                m_ws.m_geom.update(m_ws.m_geom);
+            }
+
             return;
         }
     }
