@@ -69,19 +69,16 @@ public class DifferentialCoordinates extends PjWorkshop {
     }
 
     public static PdVector computeCentroid(PdVector[] v) {
-        int V = v[0].getSize();
-        System.out.println("SIZE X IS:   " + V);
-        System.out.println("SIZE Y IS:   " + v[1].getSize());
-        System.out.println("SIZE Z IS:   " + v[2].getSize());
+      int V = v[0].getSize();
 
-        PdVector centroid = new PdVector(3);
-        for (int i = 0; i < V; i++) {
-            PdVector vertex = new PdVector(v[0].getEntry(i), v[1].getEntry(i), v[2].getEntry(i));
-            centroid.add(vertex);
-        }
-        centroid.multScalar(1.0d / (double) V);
+      PdVector centroid = new PdVector(3);
+      for (int i = 0; i < V; i++) {
+        PdVector vertex = new PdVector(v[0].getEntry(i), v[1].getEntry(i), v[2].getEntry(i));
+        centroid.add(vertex);
+      }
+      centroid.multScalar(1.0d / (double) V);
 
-        return centroid;
+      return centroid;
     }
 
     public PgElementSet updateGeometry(PdVector[] vts, boolean saveCopy) {
@@ -158,7 +155,6 @@ public class DifferentialCoordinates extends PjWorkshop {
 
     public PdVector[] computeVertexPositionVectorStacks() {
         PdVector v_x = new PdVector(V);
-        System.out.println("Initial V: " + V);
         PdVector v_y = new PdVector(V);
         PdVector v_z = new PdVector(V);
 
@@ -177,7 +173,7 @@ public class DifferentialCoordinates extends PjWorkshop {
 
     public PnSparseMatrix computeGradientMatrix() {
         // Create sparse gradient matrix
-        PnSparseMatrix G = new PnSparseMatrix(3 * F, V, 3);
+        PnSparseMatrix G = new PnSparseMatrix(3*F, V, 3);
 
         // Fill in sparse gradient matrix
         for (int i = 0; i < F; i++) {
@@ -189,7 +185,7 @@ public class DifferentialCoordinates extends PjWorkshop {
     }
 
     public PnSparseMatrix computeMv() {
-        PnSparseMatrix Mv = new PnSparseMatrix(3 * F, 3 * F, 1);
+        PnSparseMatrix Mv = new PnSparseMatrix(3*F, 3*F, 1);
 
         for (int i = 0; i < F; i++) {
             for (int j = 0; j < 3; j++) {
