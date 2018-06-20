@@ -47,7 +47,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
 
     public DifferentialCoordinates_IP() {
         super();
-        if(getClass() == DifferentialCoordinates_IP.class)
+        if (getClass() == DifferentialCoordinates_IP.class)
             init();
     }
 
@@ -63,7 +63,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
 
     public void setParent(PsUpdateIf parent) {
         super.setParent(parent);
-        m_ws = (DifferentialCoordinates)parent;
+        m_ws = (DifferentialCoordinates) parent;
 
         addSubTitle("Tool to compute sparse matrix G, cotangent matrix S, laplace matrix L, and more.");
 
@@ -72,7 +72,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         validate();
     }
 
-    public void computeMatricesUI(){
+    public void computeMatricesUI() {
         Panel panel1 = new Panel();
         buttonComputeG = new Button("Compute sparse matrix G");
         buttonComputeG.addActionListener(this);
@@ -107,7 +107,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
     public void inputMatrixUI() {
         Panel panel2 = new Panel();
 
-        panel2.setLayout(new GridLayout(3,3));
+        panel2.setLayout(new GridLayout(3, 3));
         textFieldG1 = new TextField("1");
         panel2.add(textFieldG1);
         textFieldG2 = new TextField("0");
@@ -132,9 +132,9 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
         buttonComputeInput = new Button("Use input matrix to transform");
         buttonComputeInput.addActionListener(this);
-        testTextArea = new TextArea("Text Area for testing the compute button",4, 20);
+        //testTextArea = new TextArea("Text Area for testing the compute button", 4, 20);
         panel3.add(buttonComputeInput);
-        panel3.add(testTextArea);
+        //panel3.add(testTextArea);
         add(panel3);
 
         Panel panel4 = new Panel();
@@ -155,78 +155,44 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             PnSparseMatrix G = m_ws.computeGradientMatrix();
             gradientMatrix = G;
 
-            PdMatrix transformationMatrix = getInputMatrix();
+//            PdMatrix transformationMatrix = getInputMatrix();
 
-            PdVector[] vs = m_ws.computeVertexPositionVectorStacks();
-            PdVector[] gs = m_ws.computeGradientVectorStacks(gradientMatrix, vs);
-            PdVector[] gts = m_ws.computeTransformedGradientVectorStacks(gs, transformationMatrix);
+//            PdVector[] vs = m_ws.computeVertexPositionVectorStacks();
+//            PdVector[] gs = m_ws.computeGradientVectorStacks(gradientMatrix, vs);
+//            PdVector[] gts = m_ws.computeTransformedGradientVectorStacks(gs, transformationMatrix);
 
-            String output = "";
-            // String output = "=== Gradient Matrix ===\n" + gradientMatrix.toString() + "\n";
-            //
-            // output += "=== Vertex Position Vector Stacks ===\n";
-            // for (int i = 0; i < 3; i++) {
-            //     output += "v_" + dims[i] + vs[i].toShortString() + "\n";
-            // }
-            //
-            // output += "=== Gradient Vector Stacks ===\n";
-            // for (int i = 0; i < 3; i++) {
-            //     output += "g_" + dims[i] + gs[i].toShortString() + "\n";
-            // }
-            //
-            // output += "=== Transformed Gradient Vector Stacks ===\n";
-            // for (int i = 0; i < 3; i++) {
-            //     output += "gt_" + dims[i] + gts[i].toShortString() + "\n";
-            // }
+            String output = "=== Gradient Matrix ===\n" + gradientMatrix.toShortString() + "\n";
+//
+//            output += "=== Vertex Position Vector Stacks ===\n";
+//            for (int i = 0; i < 3; i++) {
+//                output += "v_" + dims[i] + vs[i].toShortString() + "\n";
+//            }
+//
+//            output += "=== Gradient Vector Stacks ===\n";
+//            for (int i = 0; i < 3; i++) {
+//                output += "g_" + dims[i] + gs[i].toShortString() + "\n";
+//            }
+//
+//            output += "=== Transformed Gradient Vector Stacks ===\n";
+//            for (int i = 0; i < 3; i++) {
+//                output += "gt_" + dims[i] + gts[i].toShortString() + "\n";
+//            }
 
-            PnSparseMatrix M_v = m_ws.computeMv();
+//            PdVector x_x = new PdVector(m_ws.V);
+//            PdVector x_y = new PdVector(m_ws.V);
+//            PdVector x_z = new PdVector(m_ws.V);
 
-            // Euler-Lagrange equation: Ax = b in 3 dimensions
-            PnSparseMatrix A = PnSparseMatrix.multMatrices(G.transposeNew(), PnSparseMatrix.multMatrices(M_v, G, new PnSparseMatrix()), new PnSparseMatrix());
-            PdVector b_x = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[0], new PdVector());
-            PdVector b_y = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[1], new PdVector());
-            PdVector b_z = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[2], new PdVector());
 
-            PdVector x_x = new PdVector(m_ws.V);
-            PdVector x_y = new PdVector(m_ws.V);
-            PdVector x_z = new PdVector(m_ws.V);
-
-            try {
-                PnMumpsSolver.solve(A, x_x, b_x, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
-                PnMumpsSolver.solve(A, x_y, b_y, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
-                PnMumpsSolver.solve(A, x_z, b_z, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
-
-                // output += "=== Solution ===\n";
-                // output += "vt_x = " + x_x.toShortString() + "\n";
-                // output += "vt_y = " + x_y.toShortString() + "\n";
-                // output += "vt_z = " + x_z.toShortString() + "\n";
-
-                PdVector[] vts = {x_x, x_y, x_z};
-
-                // translate solution to original centroid
-                PdVector centroidOriginal = DifferentialCoordinates.computeCentroid(vs);
-                PdVector centroidAfterSolving = DifferentialCoordinates.computeCentroid(vts);
-
-                PdVector translation = PdVector.subNew(centroidOriginal, centroidAfterSolving);
-
-                 x_x.add(translation.getEntry(0));
-                 x_y.add(translation.getEntry(1));
-                 x_z.add(translation.getEntry(2));
-
-                PdVector centroidAfterTranslation = DifferentialCoordinates.computeCentroid(vts);
-
-                m_ws.updateGeometry(vts);
-                m_ws.m_geom.update(m_ws.m_geom);
-            } catch(Exception e) {
-                e.printStackTrace();
-                System.out.println("System could not be solved, please refer to stacktrace above.");
-            }
+//                output += "=== Solution ===\n";
+//                output += "vt_x = " + x_x.toShortString() + "\n";
+//                output += "vt_y = " + x_y.toShortString() + "\n";
+//                output += "vt_z = " + x_z.toShortString() + "\n";
 
             textAreaG.setText(output);
             return;
         }
         if (source == buttonComputeS) {
-            if(gradientMatrix == null){
+            if (gradientMatrix == null) {
                 gradientMatrix = m_ws.computeGradientMatrix();
             }
             PnSparseMatrix mv = m_ws.computeMv();
@@ -245,18 +211,65 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
             return;
         }
         if (source == buttonComputeInput) {
-            testTextArea.setText(getInputMatrix().toShortString());
+            PnSparseMatrix G = m_ws.computeGradientMatrix();
+            gradientMatrix = G;
+            PdMatrix inputMatrix = getInputMatrix();
+            //testTextArea.setText(inputMatrix.toShortString());
+            PdMatrix transformationMatrix = inputMatrix;
+
+            PdVector[] vs = m_ws.computeVertexPositionVectorStacks();
+            PdVector[] gs = m_ws.computeGradientVectorStacks(gradientMatrix, vs);
+            PdVector[] gts = m_ws.computeTransformedGradientVectorStacks(gs, transformationMatrix);
+
+            PnSparseMatrix M_v = m_ws.computeMv();
+
+            // Euler-Lagrange equation: Ax = b in 3 dimensions
+            PnSparseMatrix A = PnSparseMatrix.multMatrices(G.transposeNew(), PnSparseMatrix.multMatrices(M_v, G, new PnSparseMatrix()), new PnSparseMatrix());
+            PdVector b_x = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[0], new PdVector());
+            PdVector b_y = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[1], new PdVector());
+            PdVector b_z = PnSparseMatrix.rightMultVector(PnSparseMatrix.multMatrices(G.transposeNew(), M_v, new PnSparseMatrix()), gts[2], new PdVector());
+
+            PdVector x_x = new PdVector(m_ws.V);
+            PdVector x_y = new PdVector(m_ws.V);
+            PdVector x_z = new PdVector(m_ws.V);
+
+            try {
+                PnMumpsSolver.solve(A, x_x, b_x, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
+                PnMumpsSolver.solve(A, x_y, b_y, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
+                PnMumpsSolver.solve(A, x_z, b_z, PnMumpsSolver.Type.GENERAL_SYMMETRIC);
+
+                PdVector[] vts = {x_x, x_y, x_z};
+
+                // translate solution to original centroid
+                PdVector centroidOriginal = DifferentialCoordinates.computeCentroid(vs);
+                PdVector centroidAfterSolving = DifferentialCoordinates.computeCentroid(vts);
+
+                PdVector translation = PdVector.subNew(centroidOriginal, centroidAfterSolving);
+
+                x_x.add(translation.getEntry(0));
+                x_y.add(translation.getEntry(1));
+                x_z.add(translation.getEntry(2));
+
+                //PdVector centroidAfterTranslation = DifferentialCoordinates.computeCentroid(vts);
+
+                m_ws.updateGeometry(vts);
+                m_ws.m_geom.update(m_ws.m_geom);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("System could not be solved, please refer to stacktrace above.");
+            }
             return;
         }
         if (source == buttonReset) {
-          m_ws.m_geom = m_ws.m_geomSave;
-          m_ws.m_geom.update(m_ws.m_geom);
-          return;
+            m_ws.m_geom = m_ws.m_geomSave;
+            m_ws.m_geom.update(m_ws.m_geom);
+            return;
         }
     }
 
     /**
      * Returns the matrix represented by the form input
+     *
      * @return
      */
     protected PdMatrix getInputMatrix() {
@@ -278,11 +291,12 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
 
     /**
      * Makes sure the textField has value 0 instead of nothing.
+     *
      * @param text
      * @return A double to place in the matrix
      */
-    protected double evaluateTextField(TextField text){
-        if(text.getText().isEmpty()){
+    protected double evaluateTextField(TextField text) {
+        if (text.getText().isEmpty()) {
             text.setText("0");
         }
 
@@ -293,7 +307,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
      * Get information which bottom buttons a dialog should create
      * when showing this info panel.
      */
-    protected int getDialogButtons()        {
+    protected int getDialogButtons() {
         return PsDialog.BUTTON_OK;
     }
 }
