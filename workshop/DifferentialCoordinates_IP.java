@@ -148,7 +148,7 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
 
         Panel panel4 = new Panel();
         panel4.setLayout(new BoxLayout(panel4, BoxLayout.Y_AXIS));
-        buttonReset = new Button("Reset");
+        buttonReset = new Button("Undo");
         buttonReset.addActionListener(this);
         panel4.add(buttonReset);
         add(panel4);
