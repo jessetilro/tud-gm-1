@@ -313,13 +313,4 @@ public class DifferentialCoordinates extends PjWorkshop {
             }
         }
     }
-
-    public PdVector calculateVector(PnSparseMatrix G) {
-        double[] function = new double[3];
-        function[0] = 0.0008;
-        function[1] = 0.0;
-        function[2] = 0.5564;
-        PdVector functionVals = new PdVector(function);
-        return PnSparseMatrix.rightMultVector(G, functionVals, null);
-    }
 }

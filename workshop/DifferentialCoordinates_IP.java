@@ -1,6 +1,7 @@
 package workshop;
 
 import jv.geom.PgElementSet;
+import jv.geom.PgVectorField;
 import jv.number.PuDouble;
 import jv.object.PsDialog;
 import jv.object.PsUpdateIf;
@@ -198,6 +199,8 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
 //                output += "vt_z = " + x_z.toShortString() + "\n";
 
             textAreaG.setText(output);
+            addVectorFields();
+            
             return;
         }
         if (source == buttonComputeS) {
@@ -299,6 +302,46 @@ public class DifferentialCoordinates_IP extends PjWorkshop_IP implements ActionL
         inputMatrix.addEntry(2, 2, evaluateTextField(textFieldG9));
 
         return inputMatrix;
+    }
+    
+    /**
+     * Add 3 vector fields using x,y, and z gradients.
+     * Only z is visible initially
+     */
+    protected void addVectorFields() {
+        PgVectorField vfx = new PgVectorField(3, PgVectorField.ELEMENT_BASED);
+        PgVectorField vfy = new PgVectorField(3, PgVectorField.ELEMENT_BASED);
+        PgVectorField vfz = new PgVectorField(3, PgVectorField.ELEMENT_BASED);
+
+        vfx.setNumVectors(m_ws.F);
+        vfy.setNumVectors(m_ws.F);
+        vfz.setNumVectors(m_ws.F);
+        
+        PdVector[] vs = m_ws.computeVertexPositionVectorStacks();
+        PdVector[] gs = m_ws.computeGradientVectorStacks(gradientMatrix, vs);
+        for (int i = 0; i < m_ws.F; i++) {
+            PdVector vecNewx = new PdVector(gs[0].getEntry(i*3), gs[0].getEntry(i*3 + 1), gs[0].getEntry(i*3 + 2));
+            vfx.setVector(i, vecNewx);
+            PdVector vecNewy = new PdVector(gs[1].getEntry(i*3), gs[1].getEntry(i*3 + 1), gs[1].getEntry(i*3 + 2));
+            vfy.setVector(i, vecNewy);
+            PdVector vecNewz = new PdVector(gs[2].getEntry(i*3), gs[2].getEntry(i*3 + 1), gs[2].getEntry(i*3 + 2));
+            vfz.setVector(i, vecNewz);
+        }
+        vfx.showVectorArrows(true);
+        vfy.showVectorArrows(true);
+        vfz.showVectorArrows(true);
+        
+        vfx.setName("Gradient vectors x");
+        vfy.setName("Gradient vectors y");
+        vfz.setName("Gradient vectors z");
+        if (m_ws.m_geom.getNumVectorFields() == 3) {
+            m_ws.m_geom.removeAllVectorFields();
+        }
+        m_ws.m_geom.addVectorField(vfx);
+        m_ws.m_geom.addVectorField(vfy);
+        m_ws.m_geom.addVectorField(vfz);
+        m_ws.m_geom.getVectorField(0).setVisible(false);
+        m_ws.m_geom.getVectorField(1).setVisible(false);
     }
 
     /**
